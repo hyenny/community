@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,7 +36,7 @@ public class Member {
   @Column(nullable = false)
   private String nickname;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "role_id")
   private Role role;
 
@@ -49,12 +49,8 @@ public class Member {
     this.role = role;
   }
 
-  public static Member createUser(String name, String email, String password, String nickname) {
-    return new Member(name, email, password, nickname, Role.create(RoleType.ROLE_USER));
-  }
-
-  public static Member createAdmin(String name, String email, String password, String nickname) {
-    return new Member(name, email, password, nickname, Role.create(RoleType.ROLE_ADMIN));
+  public static Member create(String name, String email, String password, String nickname, Role role) {
+    return new Member(name, email, password, nickname, role);
   }
 
   @Override
