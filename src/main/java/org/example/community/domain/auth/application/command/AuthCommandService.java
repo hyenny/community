@@ -22,7 +22,7 @@ public class AuthCommandService {
     var role = roleRepository.findByName(RoleType.ROLE_USER).orElseThrow(() -> new NoSuchElementException("해당 권한을 찾을 수 없습니다. : " + RoleType.ROLE_USER));
     var findMember = memberRepository.findByEmail(command.email());
     if (findMember.isPresent()) {
-      throw new IllegalArgumentException("이미 존재하는 이메일입니다. : " + command.email());
+      throw new IllegalArgumentException("이미 등록된 이메일입니다. : " + command.email());
     }
 
     var user = Member.create(
