@@ -48,6 +48,12 @@ public class Post {
     this.updatedAt = LocalDateTime.now();
   }
 
+  public void update(String title, String content) {
+    this.title = title;
+    this.content = content;
+    this.updatedAt = LocalDateTime.now();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
