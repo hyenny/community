@@ -1,4 +1,4 @@
-package org.example.community.domain.post.command;
+package org.example.community.domain.post.application.command;
 
 import org.example.community.domain.auth.domain.MemberPrinciple;
 

@@ -3,7 +3,7 @@ package org.example.community.domain.post.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.community.domain.auth.domain.MemberPrinciple;
-import org.example.community.domain.post.command.PostCommandService;
+import org.example.community.domain.post.application.command.PostCommandService;
 import org.example.community.domain.post.api.request.CreatePostRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

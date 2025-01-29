@@ -1,4 +1,4 @@
-package org.example.community.domain.post.command;
+package org.example.community.domain.post.application.command;
 
 import lombok.RequiredArgsConstructor;
 import org.example.community.domain.post.domain.Author;
