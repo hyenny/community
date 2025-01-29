@@ -1,25 +1,19 @@
 package org.example.community.common.security;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -61,21 +55,13 @@ public class JwtTokenProvider implements InitializingBean {
         .compact();
   }
 
-  public Authentication getAuthentication(String token) {
-    Claims claims = Jwts.parser()
+  public String getUsername(String token){
+    return Jwts.parser()
         .verifyWith(key)
         .build()
         .parseSignedClaims(token)
-        .getPayload();
-
-    Collection<? extends GrantedAuthority> authorities =
-        Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-            .map(SimpleGrantedAuthority::new)
-            .toList();
-
-    User principal = new User(claims.getSubject(), "", authorities);
-
-    return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        .getPayload()
+        .getSubject();
   }
 
   public boolean validateToken(String token) {
