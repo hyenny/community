@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.example.community.common.page.PageResponse;
+import org.example.community.domain.post.application.query.dto.GetPostQuery;
 import org.example.community.domain.post.application.query.dto.PostDetail;
 import org.example.community.domain.post.application.query.dto.PostSummary;
 import org.example.community.domain.post.domain.Post;

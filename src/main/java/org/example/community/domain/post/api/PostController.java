@@ -9,7 +9,7 @@ import org.example.community.domain.post.api.request.UpdatePostRequest;
 import org.example.community.domain.post.api.response.GetPostResponse;
 import org.example.community.domain.post.application.command.PostCommandService;
 import org.example.community.domain.post.api.request.CreatePostRequest;
-import org.example.community.domain.post.application.query.GetPostQuery;
+import org.example.community.domain.post.application.query.dto.GetPostQuery;
 import org.example.community.domain.post.application.query.PostQueryService;
 import org.example.community.domain.post.application.query.dto.PostSummary;
 import org.springframework.data.domain.Pageable;

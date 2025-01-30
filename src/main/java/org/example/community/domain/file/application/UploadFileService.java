@@ -1,5 +1,6 @@
 package org.example.community.domain.file.application;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.example.community.domain.file.domain.UploadFile;
@@ -22,5 +23,11 @@ public class UploadFileService {
         .build();
 
     return uploadFileRepository.save(uploadFile).getId();
+  }
+
+  public List<UploadFileSummary> getAll(List<UUID> ids) {
+    return uploadFileRepository.findAllById(ids).stream()
+        .map(UploadFileSummary::of)
+        .toList();
   }
 }
