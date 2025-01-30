@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.example.community.common.page.PageResponse;
+import org.example.community.domain.file.application.UploadFileService;
+import org.example.community.domain.post.application.query.dto.AttachmentDetail;
 import org.example.community.domain.post.application.query.dto.GetPostQuery;
 import org.example.community.domain.post.application.query.dto.PostDetail;
 import org.example.community.domain.post.application.query.dto.PostSummary;
 import org.example.community.domain.post.domain.Post;
+import org.example.community.domain.post.domain.PostAttachment;
+import org.example.community.domain.post.domain.PostAttachmentRepository;
 import org.example.community.domain.post.domain.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,16 +23,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostQueryService {
   private final PostRepository postRepository;
+  private final PostAttachmentRepository postAttachmentRepository;
+  private final UploadFileService uploadFileService;
 
   public PostDetail get(GetPostQuery query) {
     var post = postRepository.findById(query.id()).orElseThrow(() -> new NoSuchElementException("해당 게시글을 찾을 수 없습니다. : " + query.id()));
-    return new PostDetail(
-        post.getTitle(),
-        post.getContent(),
-        post.getAuthor(),
-        post.getCreatedAt(),
-        post.getUpdatedAt()
-    );
+    var attachments = postAttachmentRepository.findByPostId(query.id()).stream()
+        .map(PostAttachment::getAttachment)
+        .map(attachment -> AttachmentDetail.of(attachment, uploadFileService.getFileDownloadUrl(attachment.storeFilename())))
+        .toList();
+
+    return PostDetail.of(post, attachments);
   }
 
   public PageResponse<PostSummary> page(Pageable pageable) {

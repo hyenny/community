@@ -48,7 +48,7 @@ class PostAttachmentService {
           .map(uploadFile ->
               PostAttachment.builder()
                   .post(post)
-                  .attachment(new Attachment(uploadFile.id(), uploadFile.originalFilename()))
+                  .attachment(new Attachment(uploadFile.id(), uploadFile.originalFilename(), uploadFile.storeFilename()))
                   .build())
           .toList();
       postAttachmentRepository.saveAll(newPostAttachments);
@@ -61,7 +61,7 @@ class PostAttachmentService {
     var postAttachments = uploadFiles.stream()
         .map(uploadFile -> PostAttachment.builder()
             .post(post)
-            .attachment(new Attachment(uploadFile.id(), uploadFile.originalFilename()))
+            .attachment(new Attachment(uploadFile.id(), uploadFile.originalFilename(), uploadFile.storeFilename()))
             .build())
         .toList();
     postAttachmentRepository.saveAll(postAttachments);

@@ -8,7 +8,9 @@ import java.util.UUID;
 public record Attachment (
   @Column(name = "attachment_id", nullable = false)
   UUID id,
-  @Column(name = "attachment_name", nullable = false)
-  String name
+  @Column(name = "original_filename", nullable = false)
+  String originalFilename,
+  @Column(name = "store_filename", nullable = false)
+  String storeFilename
 ) {
 }

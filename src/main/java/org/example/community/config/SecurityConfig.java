@@ -30,6 +30,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorize -> authorize
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/files/**").permitAll()
                 .anyRequest().authenticated()
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
