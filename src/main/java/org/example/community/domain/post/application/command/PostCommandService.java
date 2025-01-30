@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.example.community.domain.auth.domain.MemberPrinciple;
 import org.example.community.domain.post.application.command.dto.CreatePostCommand;
+import org.example.community.domain.post.application.command.dto.DeletePostCommand;
 import org.example.community.domain.post.application.command.dto.UpdatePostCommand;
 import org.example.community.domain.post.domain.Author;
 import org.example.community.domain.post.domain.Post;
@@ -41,9 +42,19 @@ public class PostCommandService {
     postAttachmentService.update(post, command.fileIds());
   }
 
+  @Transactional
+  public void delete(DeletePostCommand command) {
+    var currentMember = command.currentMember();
+    var post = postRepository.findById(command.id()).orElseThrow(() -> new NoSuchElementException("해당 게시글을 찾을 수 없습니다. : " + command.id()));
+    validateAuthor(currentMember, post.getAuthor());
+
+    post.delete();
+    postAttachmentService.delete(post);
+  }
+
   private void validateAuthor(MemberPrinciple currentMember, Author author) {
     if (!currentMember.getId().equals(author.id())) {
-      throw new AccessDeniedException("해당 글을 수정할 권한이 없습니다.");
+      throw new AccessDeniedException("해당 글에 접근할 수 있는 권한이 없습니다.");
     }
   }
 }

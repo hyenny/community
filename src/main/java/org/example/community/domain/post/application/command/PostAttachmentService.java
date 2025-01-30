@@ -66,4 +66,12 @@ class PostAttachmentService {
         .toList();
     postAttachmentRepository.saveAll(postAttachments);
   }
+
+  @Transactional
+  public void delete(Post post) {
+    var postAttachments = postAttachmentRepository.findByPostId(post.getId());
+    for (PostAttachment postAttachment : postAttachments) {
+      postAttachment.delete();
+    }
+  }
 }

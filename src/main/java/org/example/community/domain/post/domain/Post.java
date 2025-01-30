@@ -39,6 +39,9 @@ public class Post {
   @Column(nullable = false)
   private LocalDateTime updatedAt;
 
+  @Column
+  private LocalDateTime deletedAt;
+
   @Builder
   public Post(String title, String content, Author author) {
     this.title  = title;
@@ -46,12 +49,17 @@ public class Post {
     this.author = author;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
+    this.deletedAt = null;
   }
 
   public void update(String title, String content) {
     this.title = title;
     this.content = content;
     this.updatedAt = LocalDateTime.now();
+  }
+
+  public void delete() {
+    this.deletedAt = LocalDateTime.now();
   }
 
   @Override
