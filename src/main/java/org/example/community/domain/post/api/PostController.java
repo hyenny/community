@@ -3,6 +3,7 @@ package org.example.community.domain.post.api;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.example.community.common.page.PageResponse;
 import org.example.community.domain.auth.domain.MemberPrinciple;
 import org.example.community.domain.post.api.request.UpdatePostRequest;
 import org.example.community.domain.post.api.response.GetPostResponse;
@@ -10,6 +11,8 @@ import org.example.community.domain.post.application.command.PostCommandService;
 import org.example.community.domain.post.api.request.CreatePostRequest;
 import org.example.community.domain.post.application.query.GetPostQuery;
 import org.example.community.domain.post.application.query.PostQueryService;
+import org.example.community.domain.post.application.query.dto.PostSummary;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,14 +51,12 @@ public class PostController {
 
   @GetMapping("/{id}")
   public ResponseEntity<GetPostResponse> get(@PathVariable UUID id) {
-    var post = postQueryService.get(new GetPostQuery(id));
-    var response = new GetPostResponse(
-        post.getTitle(),
-        post.getContent(),
-        post.getAuthor(),
-        post.getCreatedAt(),
-        post.getUpdatedAt()
-    );
-    return ResponseEntity.ok(response);
+    var postDetail = postQueryService.get(new GetPostQuery(id));
+    return ResponseEntity.ok(GetPostResponse.of(postDetail));
+  }
+
+  @GetMapping
+  public ResponseEntity<PageResponse<PostSummary>> page(Pageable pageable) {
+    return ResponseEntity.ok(postQueryService.page(pageable));
   }
 }

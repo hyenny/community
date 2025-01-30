@@ -1,8 +1,7 @@
 package org.example.community.domain.post.application.command;
 
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
-import org.example.community.domain.post.application.query.GetPostQuery;
-import org.example.community.domain.post.application.query.PostQueryService;
 import org.example.community.domain.post.domain.Author;
 import org.example.community.domain.post.domain.Post;
 import org.example.community.domain.post.domain.PostRepository;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostCommandService {
   private final PostRepository postRepository;
-  private final PostQueryService postQueryService;
 
   @Transactional
   public void create(CreatePostCommand command) {
@@ -30,7 +28,7 @@ public class PostCommandService {
   @Transactional
   public void update(UpdatePostCommand command) {
     var currentMember = command.currentMember();
-    var post = postQueryService.get(new GetPostQuery(command.id()));
+    var post = postRepository.findById(command.id()).orElseThrow(() -> new NoSuchElementException("해당 게시글을 찾을 수 없습니다. : " + command.id()));
     if (!currentMember.getId().equals(post.getAuthor().id())) {
       throw new AccessDeniedException("해당 글을 수정할 권한이 없습니다.");
     }
