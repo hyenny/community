@@ -1,5 +1,6 @@
 package org.example.community.domain.post.application.query;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,10 @@ public class PostAttachmentQueryService {
   }
 
   public List<AttachmentCount> countAll(List<UUID> postIds) {
+    if (postIds.isEmpty()) {
+      return Collections.emptyList();
+    }
+
     return postAttachmentRepository.countAllByPostIds(postIds);
   }
 

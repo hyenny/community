@@ -1,5 +1,6 @@
 package org.example.community.domain.reply.application.query;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.community.domain.reply.domain.ReplyCount;
@@ -20,6 +21,10 @@ public class ReplyQueryService {
   }
 
   public List<ReplyCount> countAll(GetAllReplyCountQuery query) {
+    if (query.targetType() == null || query.targetIds().isEmpty()) {
+      return Collections.emptyList();
+    }
+
     return replyRepository.countAllByTarget(query.targetType(), query.targetIds());
   }
 }
