@@ -55,4 +55,8 @@ public class Reply {
     this.updatedAt = LocalDateTime.now();
     this.deletedAt = null;
   }
+
+  public void delete() {
+    this.deletedAt = LocalDateTime.now();
+  }
 }

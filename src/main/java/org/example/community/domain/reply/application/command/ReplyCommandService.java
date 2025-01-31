@@ -28,4 +28,12 @@ public class ReplyCommandService {
 
     replyRepository.save(reply);
   }
+
+  @Transactional
+  public void delete(DeleteReplyCommand command) {
+    var replies = replyRepository.findAllActiveByTarget(command.targetType(), command.targetId());
+    for (Reply reply : replies) {
+      reply.delete();
+    }
+  }
 }

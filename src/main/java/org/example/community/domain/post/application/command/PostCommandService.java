@@ -9,6 +9,9 @@ import org.example.community.domain.post.application.command.dto.UpdatePostComma
 import org.example.community.domain.post.domain.Author;
 import org.example.community.domain.post.domain.Post;
 import org.example.community.domain.post.domain.PostRepository;
+import org.example.community.domain.reply.application.command.DeleteReplyCommand;
+import org.example.community.domain.reply.application.command.ReplyCommandService;
+import org.example.community.domain.reply.domain.TargetType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostCommandService {
   private final PostRepository postRepository;
   private final PostAttachmentService postAttachmentService;
+  private final ReplyCommandService replyCommandService;
 
   @Transactional
   public void create(CreatePostCommand command) {
@@ -50,6 +54,7 @@ public class PostCommandService {
 
     post.delete();
     postAttachmentService.delete(post);
+    replyCommandService.delete(new DeleteReplyCommand(TargetType.POST, post.getId()));
   }
 
   private void validateAuthor(MemberPrinciple currentMember, Author author) {
