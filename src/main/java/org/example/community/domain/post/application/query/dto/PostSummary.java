@@ -11,9 +11,18 @@ public record PostSummary(
     Author author,
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
-    Long attachmentCount
+    Long attachmentCount,
+    Long replyCount
 ) {
-  public static PostSummary of(Post post, Long attachmentCount) {
-    return new PostSummary(post.getId(), post.getTitle(), post.getAuthor(), post.getCreatedAt(), post.getUpdatedAt(), attachmentCount);
+  public static PostSummary of(Post post, Long attachmentCount, Long replyCount) {
+    return new PostSummary(
+        post.getId(),
+        post.getTitle(),
+        post.getAuthor(),
+        post.getCreatedAt(),
+        post.getUpdatedAt(),
+        attachmentCount,
+        replyCount
+    );
   }
 }

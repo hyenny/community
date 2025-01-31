@@ -2,6 +2,7 @@ package org.example.community.domain.reply.application.query;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.community.domain.reply.domain.ReplyCount;
 import org.example.community.domain.reply.domain.ReplyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,5 +17,9 @@ public class ReplyQueryService {
     return replyRepository.findAllActiveByTarget(query.targetType(), query.targetId()).stream()
         .map(ReplyDetail::of)
         .toList();
+  }
+
+  public List<ReplyCount> countAll(GetAllReplyCountQuery query) {
+    return replyRepository.countAllByTarget(query.targetType(), query.targetIds());
   }
 }

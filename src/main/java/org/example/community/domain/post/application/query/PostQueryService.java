@@ -1,9 +1,7 @@
 package org.example.community.domain.post.application.query;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.community.common.page.PageResponse;
@@ -13,8 +11,10 @@ import org.example.community.domain.post.application.query.dto.PostSummary;
 import org.example.community.domain.post.domain.AttachmentCount;
 import org.example.community.domain.post.domain.Post;
 import org.example.community.domain.post.domain.PostRepository;
+import org.example.community.domain.reply.application.query.GetAllReplyCountQuery;
 import org.example.community.domain.reply.application.query.GetRepliesQuery;
 import org.example.community.domain.reply.application.query.ReplyQueryService;
+import org.example.community.domain.reply.domain.ReplyCount;
 import org.example.community.domain.reply.domain.TargetType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,11 +43,13 @@ public class PostQueryService {
     Page<Post> page = postRepository.findAllOrderByCreatedAtDesc(pageable);
     var postIds = page.getContent().stream().map(Post::getId).toList();
 
-    Map<UUID, Long> postAttachmentCount = postAttachmentQueryService.countAll(postIds).stream()
+    var postAttachmentCount = postAttachmentQueryService.countAll(postIds).stream()
         .collect(Collectors.toMap(AttachmentCount::postId, AttachmentCount::count));
+    var replyCount = replyQueryService.countAll(new GetAllReplyCountQuery(TargetType.POST, postIds)).stream()
+        .collect(Collectors.toMap(ReplyCount::targetId, ReplyCount::count));
 
     List<PostSummary> content = page.getContent().stream()
-        .map(post -> PostSummary.of(post, postAttachmentCount.getOrDefault(post.getId(), 0L)))
+        .map(post -> PostSummary.of(post, postAttachmentCount.getOrDefault(post.getId(), 0L), replyCount.getOrDefault(post.getId(), 0L)))
         .toList();
     return new PageResponse<>(content, page);
   }
