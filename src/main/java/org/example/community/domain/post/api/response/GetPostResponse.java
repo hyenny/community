@@ -5,23 +5,26 @@ import java.util.List;
 import org.example.community.domain.post.application.query.dto.AttachmentDetail;
 import org.example.community.domain.post.application.query.dto.PostDetail;
 import org.example.community.domain.post.domain.Author;
+import org.example.community.domain.reply.application.query.ReplyDetail;
 
 public record GetPostResponse(
     String title,
     String content,
     Author author,
-    List<AttachmentDetail> attachments,
     LocalDateTime createdAt,
-    LocalDateTime updatedAt
+    LocalDateTime updatedAt,
+    List<AttachmentDetail> attachments,
+    List<ReplyDetail> replies
 ) {
   public static GetPostResponse of(PostDetail detail) {
     return new GetPostResponse(
         detail.title(),
         detail.content(),
         detail.author(),
-        detail.attachments(),
         detail.createdAt(),
-        detail.updatedAt()
+        detail.updatedAt(),
+        detail.attachments(),
+        detail.replies()
     );
   }
 }
