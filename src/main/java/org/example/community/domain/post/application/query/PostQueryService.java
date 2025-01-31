@@ -26,11 +26,10 @@ public class PostQueryService {
   private final PostAttachmentRepository postAttachmentRepository;
   private final UploadFileService uploadFileService;
 
-  public PostDetail get(GetPostQuery query) {
-    var post = postRepository.findById(query.id()).orElseThrow(() -> new NoSuchElementException("해당 게시글을 찾을 수 없습니다. : " + query.id()));
+  public PostDetail getActive(GetPostQuery query) {
+    var post = postRepository.findActiveById(query.id()).orElseThrow(() -> new NoSuchElementException("해당 게시글을 찾을 수 없습니다. : " + query.id()));
     var attachments = postAttachmentRepository.findByPostId(query.id()).stream()
-        .map(PostAttachment::getAttachment)
-        .map(attachment -> AttachmentDetail.of(attachment, uploadFileService.getFileDownloadUrl(attachment.storeFilename())))
+        .map(this::toAttachmentDetail)
         .toList();
 
     return PostDetail.of(post, attachments);
@@ -42,5 +41,11 @@ public class PostQueryService {
         .map(post -> new PostSummary(post.getId(), post.getTitle(), post.getAuthor(), post.getCreatedAt(), post.getUpdatedAt()))
         .toList();
     return new PageResponse<>(content, page);
+  }
+
+  private AttachmentDetail toAttachmentDetail(PostAttachment postAttachment) {
+    var attachment = postAttachment.getAttachment();
+    String downloadUrl = uploadFileService.getFileDownloadUrl(attachment.storeFilename());
+    return new AttachmentDetail(attachment.id(), attachment.originalFilename(), downloadUrl);
   }
 }

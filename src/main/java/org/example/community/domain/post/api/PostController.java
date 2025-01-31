@@ -59,7 +59,7 @@ public class PostController {
 
   @GetMapping("/{id}")
   public ResponseEntity<GetPostResponse> get(@PathVariable UUID id) {
-    var postDetail = postQueryService.get(new GetPostQuery(id));
+    var postDetail = postQueryService.getActive(new GetPostQuery(id));
     return ResponseEntity.ok(GetPostResponse.of(postDetail));
   }
 
