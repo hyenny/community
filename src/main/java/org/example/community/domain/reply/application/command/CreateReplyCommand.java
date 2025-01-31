@@ -1,4 +1,4 @@
-package org.example.community.domain.reply.application;
+package org.example.community.domain.reply.application.command;
 
 import java.util.UUID;
 import org.example.community.domain.auth.domain.MemberPrinciple;
