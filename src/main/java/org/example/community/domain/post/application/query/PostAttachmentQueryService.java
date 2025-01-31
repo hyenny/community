@@ -5,6 +5,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.example.community.domain.file.application.UploadFileService;
 import org.example.community.domain.post.application.query.dto.AttachmentDetail;
+import org.example.community.domain.post.domain.AttachmentCount;
 import org.example.community.domain.post.domain.AttachmentStatus;
 import org.example.community.domain.post.domain.PostAttachment;
 import org.example.community.domain.post.domain.PostAttachmentRepository;
@@ -23,6 +24,10 @@ public class PostAttachmentQueryService {
         .filter(postAttachment -> postAttachment.getStatus().equals(AttachmentStatus.ACTIVE))
         .map(this::toAttachmentDetail)
         .toList();
+  }
+
+  public List<AttachmentCount> countAll(List<UUID> postIds) {
+    return postAttachmentRepository.countAllByPostIds(postIds);
   }
 
   private AttachmentDetail toAttachmentDetail(PostAttachment postAttachment) {

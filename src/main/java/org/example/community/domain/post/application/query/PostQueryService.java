@@ -1,12 +1,16 @@
 package org.example.community.domain.post.application.query;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.community.common.page.PageResponse;
 import org.example.community.domain.post.application.query.dto.GetPostQuery;
 import org.example.community.domain.post.application.query.dto.PostDetail;
 import org.example.community.domain.post.application.query.dto.PostSummary;
+import org.example.community.domain.post.domain.AttachmentCount;
 import org.example.community.domain.post.domain.Post;
 import org.example.community.domain.post.domain.PostRepository;
 import org.example.community.domain.reply.application.query.GetRepliesQuery;
@@ -36,9 +40,14 @@ public class PostQueryService {
   }
 
   public PageResponse<PostSummary> page(Pageable pageable) {
-    Page<Post> page = postRepository.findAll(pageable);
+    Page<Post> page = postRepository.findAllOrderByCreatedAtDesc(pageable);
+    var postIds = page.getContent().stream().map(Post::getId).toList();
+
+    Map<UUID, Long> postAttachmentCount = postAttachmentQueryService.countAll(postIds).stream()
+        .collect(Collectors.toMap(AttachmentCount::postId, AttachmentCount::count));
+
     List<PostSummary> content = page.getContent().stream()
-        .map(post -> new PostSummary(post.getId(), post.getTitle(), post.getAuthor(), post.getCreatedAt(), post.getUpdatedAt()))
+        .map(post -> PostSummary.of(post, postAttachmentCount.getOrDefault(post.getId(), 0L)))
         .toList();
     return new PageResponse<>(content, page);
   }
