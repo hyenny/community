@@ -1,6 +1,9 @@
 package org.example.community.common.exception;
 
+import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
+import org.example.community.domain.file.infra.StorageException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -20,6 +23,27 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(response);
   }
 
+  @ExceptionHandler(TypeMismatchException.class)
+  public ResponseEntity<ErrorResponse> handleTypeMismatchException(TypeMismatchException e) {
+    log.warn("handleTypeMismatchException", e);
+    ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "요청 값의 형식이 올바르지 않습니다.");
+    return ResponseEntity.badRequest().body(response);
+  }
+
+  @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+  public ResponseEntity<ErrorResponse> handleIllegalsException(RuntimeException e) {
+    log.warn("handleIllegalsException", e);
+    ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+    return ResponseEntity.badRequest().body(response);
+  }
+
+  @ExceptionHandler(NoSuchElementException.class)
+  public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException e) {
+    log.warn("handleNoSuchElementException", e);
+    ErrorResponse response = ErrorResponse.of(HttpStatus.NOT_FOUND.value(), e.getMessage());
+    return ResponseEntity.badRequest().body(response);
+  }
+
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
     log.warn("handleAuthenticationException", e);
@@ -32,6 +56,13 @@ public class GlobalExceptionHandler {
     log.warn("handleAccessDeniedException", e);
     ErrorResponse response = ErrorResponse.of(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다.");
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+  }
+
+  @ExceptionHandler(StorageException.class)
+  public ResponseEntity<ErrorResponse> handleStorageException(StorageException e) {
+    log.error("handleStorageException", e);
+    ErrorResponse response = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "파일 작업 중 오류가 발생했습니다.");
+    return ResponseEntity.internalServerError().body(response);
   }
 
   @ExceptionHandler(Exception.class)
