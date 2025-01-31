@@ -4,7 +4,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.example.community.domain.auth.domain.MemberPrinciple;
 import org.example.community.domain.reply.api.request.CreateReplyRequest;
-import org.example.community.domain.reply.application.ReplyCommandService;
+import org.example.community.domain.reply.application.command.ReplyCommandService;
 import org.example.community.domain.reply.domain.TargetType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
