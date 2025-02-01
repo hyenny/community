@@ -26,11 +26,7 @@ public class PostCommandService {
   @Transactional
   public void create(CreatePostCommand command) {
     var currentMember = command.currentMember();
-    var post = Post.builder()
-        .title(command.title())
-        .content(command.content())
-        .author(new Author(currentMember.getId(), currentMember.getNickname()))
-        .build();
+    var post = Post.create(command.title(), command.content(), currentMember);
 
     postRepository.save(post);
     postAttachmentService.create(post, command.attachmentIds());

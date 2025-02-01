@@ -9,9 +9,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.community.common.util.MaskingUtil;
+import org.example.community.domain.auth.domain.MemberPrinciple;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
 
@@ -42,14 +43,17 @@ public class Post {
   @Column
   private LocalDateTime deletedAt;
 
-  @Builder
-  public Post(String title, String content, Author author) {
+  private Post(String title, String content, Author author) {
     this.title  = title;
     this.content = content;
     this.author = author;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
     this.deletedAt = null;
+  }
+
+  public static Post create(String title, String content, MemberPrinciple member) {
+    return new Post(title, content, new Author(member.getId(), MaskingUtil.maskName(member.getNickname())));
   }
 
   public void update(String title, String content) {

@@ -1,6 +1,7 @@
 package org.example.community.domain.auth.api.request;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.example.community.domain.auth.application.command.SignupCommand;
 
@@ -16,6 +17,7 @@ public record SignupRequest(
     String password,
 
     @NotBlank(message = "닉네임은 필수 값입니다.")
+    @Min(value = 2, message = "최소 2글자 이상 입력해야 합니다.")
     String nickname
 ) {
 
