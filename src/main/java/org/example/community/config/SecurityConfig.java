@@ -33,6 +33,7 @@ public class SecurityConfig {
             authorize -> authorize
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/files/**").permitAll()
+                .requestMatchers("/api/posts/**").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

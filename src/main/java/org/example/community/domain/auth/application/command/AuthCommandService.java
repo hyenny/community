@@ -1,5 +1,6 @@
 package org.example.community.domain.auth.application.command;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.example.community.common.security.JwtTokenProvider;
@@ -37,7 +38,7 @@ public class AuthCommandService {
         command.email(),
         passwordEncoder.encode(command.password()),
         command.nickname(),
-        role
+        List.of(role)
     );
     memberRepository.save(user);
   }

@@ -15,7 +15,7 @@ public class UserDetailsQueryService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    var member = memberRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username + "을 찾을 수 없습니다."));
+    var member = memberRepository.findByEmailWithRoles(username).orElseThrow(() -> new UsernameNotFoundException(username + "을 찾을 수 없습니다."));
     return new MemberPrinciple(member);
   }
 }

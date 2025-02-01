@@ -1,5 +1,6 @@
 package org.example.community.domain.auth.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -15,8 +16,11 @@ public class MemberPrinciple implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    var grantedAuthority = new SimpleGrantedAuthority(member.getRole().getName().name());
-    return Collections.singleton(grantedAuthority);
+    var authorities = new ArrayList<GrantedAuthority>();
+    for (MemberRole memberRole : member.getRoles()) {
+      authorities.add(new SimpleGrantedAuthority(memberRole.role.getName().name()));
+    }
+    return Collections.unmodifiableCollection(authorities);
   }
 
   @Override
