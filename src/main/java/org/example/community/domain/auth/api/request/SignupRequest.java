@@ -3,8 +3,8 @@ package org.example.community.domain.auth.api.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.example.community.domain.auth.application.command.SignupCommand;
 
 @Schema(description = "회원가입 요청")
@@ -25,7 +25,7 @@ public record SignupRequest(
 
     @Schema(description = "닉네임", example = "hello", minLength = 2, requiredMode = RequiredMode.REQUIRED)
     @NotBlank(message = "닉네임은 필수 값입니다.")
-    @Min(value = 2, message = "최소 2글자 이상 입력해야 합니다.")
+    @Size(min = 2, message = "최소 2글자 이상 입력해야 합니다.")
     String nickname
 ) {
 
