@@ -2,6 +2,7 @@ package org.example.community.domain.auth.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.community.domain.auth.api.docs.AuthDocument;
 import org.example.community.domain.auth.api.request.LoginRequest;
 import org.example.community.domain.auth.api.request.SignupRequest;
 import org.example.community.domain.auth.api.response.LoginResponse;
@@ -17,15 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 @RestController
-public class AuthController {
+public class AuthController implements AuthDocument {
   private final AuthCommandService authCommandService;
 
+  @Override
   @PostMapping("/signup")
   public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest request) {
     authCommandService.signup(request.toCommand());
     return ResponseEntity.ok().build();
   }
 
+  @Override
   @PostMapping("/login")
   public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
     var token = authCommandService.login(request.toCommand());

@@ -39,7 +39,7 @@ public class Member {
   private String nickname;
 
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<MemberRole> roles = new ArrayList<>();
+  private final List<MemberRole> roles = new ArrayList<>();
 
   private Member(String name, String email, String password, String nickname) {
     this.id = null;
