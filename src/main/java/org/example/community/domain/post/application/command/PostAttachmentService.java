@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.example.community.domain.file.application.GetAllUploadFilesQuery;
 import org.example.community.domain.file.application.UploadFileService;
 import org.example.community.domain.post.domain.Attachment;
 import org.example.community.domain.post.domain.Post;
@@ -43,7 +44,7 @@ class PostAttachmentService {
         .toList();
 
     if (!newAttachmentIds.isEmpty()) {
-      var uploadFiles = uploadFileService.getAll(newAttachmentIds);
+      var uploadFiles = uploadFileService.getAll(new GetAllUploadFilesQuery(newAttachmentIds, post.getAuthor().id()));
       var newPostAttachments = uploadFiles.stream()
           .map(uploadFile ->
               PostAttachment.builder()
@@ -57,7 +58,7 @@ class PostAttachmentService {
 
   @Transactional
   public void create(Post post, List<UUID> attachmentIds) {
-    var uploadFiles = uploadFileService.getAll(attachmentIds);
+    var uploadFiles = uploadFileService.getAll(new GetAllUploadFilesQuery(attachmentIds, post.getAuthor().id()));
     var postAttachments = uploadFiles.stream()
         .map(uploadFile -> PostAttachment.builder()
             .post(post)

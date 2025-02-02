@@ -1,12 +1,14 @@
 package org.example.community.domain.file.api;
 
 import lombok.RequiredArgsConstructor;
+import org.example.community.domain.auth.domain.MemberPrinciple;
 import org.example.community.domain.file.api.docs.UploadFileDocument;
 import org.example.community.domain.file.application.UploadFileService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +24,8 @@ public class UploadFileController implements UploadFileDocument {
 
   @Override
   @PostMapping(value = "/api/upload-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<UploadFileResponse> uploadFile(@RequestParam("file") MultipartFile file) {
-    return ResponseEntity.ok(new UploadFileResponse(uploadFileService.save(file)));
+  public ResponseEntity<UploadFileResponse> uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal MemberPrinciple currentMember) {
+    return ResponseEntity.ok(new UploadFileResponse(uploadFileService.save(file, currentMember)));
   }
 
   @Override

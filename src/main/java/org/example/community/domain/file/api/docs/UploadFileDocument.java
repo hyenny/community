@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.community.common.exception.ApiErrorResponses;
+import org.example.community.domain.auth.domain.MemberPrinciple;
 import org.example.community.domain.file.api.UploadFileResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ public interface UploadFileDocument {
 
   @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UploadFileResponse.class)))
   @Operation(summary = "파일 업로드")
-  ResponseEntity<UploadFileResponse> uploadFile(@Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) MultipartFile file);
+  ResponseEntity<UploadFileResponse> uploadFile(@Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)) MultipartFile file, MemberPrinciple currentMember);
 
   @Operation(summary = "파일 다운로드", hidden = true)
   ResponseEntity<Resource> downloadFile(@Parameter(in = ParameterIn.PATH) String filename);

@@ -30,16 +30,24 @@ public class UploadFile {
   private String storeFilename;
 
   @Column(nullable = false)
+  private CreatedBy createdBy;
+
+  @Column(nullable = false)
   private LocalDateTime createdAt;
 
   @Column(nullable = false)
   private LocalDateTime updatedAt;
 
   @Builder
-  public UploadFile(String originalFilename, String storeFilename) {
+  public UploadFile(String originalFilename, String storeFilename, CreatedBy createdBy) {
     this.originalFilename = originalFilename;
     this.storeFilename = storeFilename;
+    this.createdBy = createdBy;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
+  }
+
+  public boolean equalsCreatedBy(UUID otherCreatedById) {
+    return createdBy.id().equals(otherCreatedById);
   }
 }
