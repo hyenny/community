@@ -52,16 +52,23 @@ java -jar community-0.0.1-SNAPSHOT.jar
 
 #### [참고] JWT 관련 세팅
 
-JWT 관련 값을 세팅하지 않으면 서버가 동작하지 않으므로, 반드시 설정이 필요합니다.
+JWT 관련 값을 세팅하지 않으면 서버가 동작하지 않으므로, 반드시 설정이 필요합니다. 
 
 ```yaml
 jwt:
-  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
-  token-validity-in-seconds: 60
+  secret: ${JWT_SECRET}
+  token-validity-in-seconds: ${JWT_TOKEN_VALIDITY_IN_SECONDS}
 ```
 - `JWT_SECRET` : JWT Secret Key 만드는데 사용될 secret 값
 - `JWT_TOKEN_VALIDITY_IN_SECONDS` : JWT 토큰 만료 시간(초)
 
+
+- 예시
+```yaml
+jwt:
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+  token-validity-in-seconds: 600
+```
 
 
 #### [참고] 로컬 파일 시스템 경로
@@ -81,3 +88,6 @@ file:
 > http://localhost:8080/swagger-ui/index.html
 
 
+
+## 부록
+- [프로젝트 설명](src%2Fdocs%2Fdescription.md)

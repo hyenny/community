@@ -1,4 +1,6 @@
 
+# 프로젝트 설명
+
 ## 테이블 정의서(ERD)
 
 ![community-erd](image/community-erd.png)
