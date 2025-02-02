@@ -1,10 +1,12 @@
 package org.example.community.common.page;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
+@Schema(description = "페이지 응답")
 @Getter
 @AllArgsConstructor
 public class PageResponse<T> {

@@ -5,6 +5,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.example.community.common.page.PageResponse;
 import org.example.community.domain.auth.domain.MemberPrinciple;
+import org.example.community.domain.post.api.docs.PostDocument;
 import org.example.community.domain.post.api.request.UpdatePostRequest;
 import org.example.community.domain.post.api.response.GetPostResponse;
 import org.example.community.domain.post.application.command.PostCommandService;
@@ -28,10 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
 @RestController
-public class PostController {
+public class PostController implements PostDocument {
   private final PostCommandService postCommandService;
   private final PostQueryService postQueryService;
 
+  @Override
   @PostMapping
   public ResponseEntity<Void> create(
       @Valid @RequestBody CreatePostRequest request,
@@ -41,6 +43,7 @@ public class PostController {
     return ResponseEntity.ok().build();
   }
 
+  @Override
   @PutMapping("/{id}")
   public ResponseEntity<Void> update(
       @PathVariable UUID id,
@@ -51,18 +54,21 @@ public class PostController {
     return ResponseEntity.ok().build();
   }
 
+  @Override
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id, @AuthenticationPrincipal MemberPrinciple currentMember) {
     postCommandService.delete(new DeletePostCommand(id, currentMember));
     return ResponseEntity.ok().build();
   }
 
+  @Override
   @GetMapping("/{id}")
   public ResponseEntity<GetPostResponse> get(@PathVariable UUID id) {
     var postDetail = postQueryService.getActive(new GetPostQuery(id));
     return ResponseEntity.ok(GetPostResponse.of(postDetail));
   }
 
+  @Override
   @GetMapping
   public ResponseEntity<PageResponse<PostSummary>> page(Pageable pageable) {
     return ResponseEntity.ok(postQueryService.page(pageable));
