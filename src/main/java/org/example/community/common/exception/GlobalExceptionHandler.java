@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+  /**
+   * 유효하지 않은 아규먼트 에러
+   */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     log.warn("handleMethodArgumentNotValidException", e);
@@ -23,6 +26,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(response);
   }
 
+  /**
+   * 타입 변환 불가 에러
+   */
   @ExceptionHandler(TypeMismatchException.class)
   public ResponseEntity<ErrorResponse> handleTypeMismatchException(TypeMismatchException e) {
     log.warn("handleTypeMismatchException", e);
@@ -30,6 +36,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(response);
   }
 
+  /**
+   * 잘못된 요청 형식 에러
+   */
   @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
   public ResponseEntity<ErrorResponse> handleIllegalsException(RuntimeException e) {
     log.warn("handleIllegalsException", e);
@@ -37,6 +46,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(response);
   }
 
+  /**
+   * 리소스를 찾지 못할 경우 에러
+   */
   @ExceptionHandler(NoSuchElementException.class)
   public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException e) {
     log.warn("handleNoSuchElementException", e);
@@ -44,6 +56,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(response);
   }
 
+  /**
+   * 인증 관련 에러
+   */
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
     log.warn("handleAuthenticationException", e);
@@ -51,6 +66,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
   }
 
+  /**
+   * 인가(권한) 관련 에러
+   */
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
     log.warn("handleAccessDeniedException", e);
@@ -58,6 +76,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
   }
 
+  /**
+   * 파일 저장소 관련 에러
+   */
   @ExceptionHandler(StorageException.class)
   public ResponseEntity<ErrorResponse> handleStorageException(StorageException e) {
     log.error("handleStorageException", e);
@@ -65,6 +86,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.internalServerError().body(response);
   }
 
+  /**
+   * 그 외 에러
+   */
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception e) {
     log.error("handleException", e);

@@ -39,7 +39,11 @@ curl -X 'POST' \
 }
 ```
 
-응답에 나오는 해당 토큰은 API 이용시 헤더에 넣어서 보내야 합니다.
+응답에 나오는 해당 토큰은 커뮤니티 API 호출시 Authorization 헤더에 넣어서 보내야 합니다.
+
+```
+Authorization: Bearer {token}
+```
 
 
 ## 3. 게시글 등록
