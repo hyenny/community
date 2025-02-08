@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class LocalFileStorage implements FileStorage {
 
@@ -67,6 +69,16 @@ public class LocalFileStorage implements FileStorage {
     }
     catch (MalformedURLException e) {
       throw new StorageException("파일을 읽을 수 없습니다 : " + filename, e);
+    }
+  }
+
+  @Override
+  public void delete(String filename) {
+    try {
+      Path file = load(filename);
+      Files.deleteIfExists(file);
+    } catch (Exception e) {
+      throw new StorageException("파일 삭제가 실패했습니다.", e);
     }
   }
 

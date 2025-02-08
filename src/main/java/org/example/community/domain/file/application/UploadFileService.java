@@ -10,6 +10,7 @@ import org.example.community.domain.file.domain.UploadFileRepository;
 import org.example.community.domain.file.infra.LocalFileStorage;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,6 +20,7 @@ public class UploadFileService {
   private final LocalFileStorage localFileStorage;
   private final UploadFileRepository uploadFileRepository;
 
+  @Transactional
   public UUID save(MultipartFile file, MemberPrinciple currentMember) {
     var storeFilename = localFileStorage.store(file);
     var uploadFile = UploadFile.builder()
@@ -30,13 +32,33 @@ public class UploadFileService {
     return uploadFileRepository.save(uploadFile).getId();
   }
 
+  @Transactional
+  public void deleteAll(List<UUID> fileIds) {
+    var files = uploadFileRepository.findAllById(fileIds);
+    for (var file : files) {
+      localFileStorage.delete(file.getStoreFilename());
+    }
+    uploadFileRepository.deleteAll(files);
+  }
+
   public List<UploadFileSummary> getAll(GetAllUploadFilesQuery query) {
     var uploadFiles = uploadFileRepository.findAllById(query.ids());
     validateUploadFiles(uploadFiles, query);
 
     return uploadFiles.stream()
-        .map(UploadFileSummary::of)
-        .toList();
+            .map(UploadFileSummary::of)
+            .toList();
+  }
+
+  public String getFileDownloadUrl(String filename) {
+    return ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/files/")
+            .path(filename)
+            .toUriString();
+  }
+
+  public Resource loadAsResource(String filename) {
+    return localFileStorage.loadAsResource(filename);
   }
 
   private void validateUploadFiles(List<UploadFile> actualFiles, GetAllUploadFilesQuery query) {
@@ -49,14 +71,5 @@ public class UploadFileService {
     }
   }
 
-  public String getFileDownloadUrl(String filename) {
-    return ServletUriComponentsBuilder.fromCurrentContextPath()
-        .path("/files/")
-        .path(filename)
-        .toUriString();
-  }
 
-  public Resource loadAsResource(String filename) {
-    return localFileStorage.loadAsResource(filename);
-  }
 }

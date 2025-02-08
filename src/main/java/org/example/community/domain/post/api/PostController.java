@@ -58,7 +58,7 @@ public class PostController implements PostDocument {
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id, @AuthenticationPrincipal MemberPrinciple currentMember) {
     postCommandService.delete(new DeletePostCommand(id, currentMember));
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 
   @Override
