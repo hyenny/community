@@ -8,4 +8,5 @@ public interface FileStorage {
   String store(MultipartFile file);
   Path load(String filename);
   Resource loadAsResource(String filename);
+  void delete(String filename);
 }

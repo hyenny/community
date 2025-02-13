@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.community.domain.file.application.GetAllUploadFilesQuery;
 import org.example.community.domain.file.application.UploadFileService;
 import org.example.community.domain.post.domain.Attachment;
+import org.example.community.domain.post.domain.event.AttachmentsDeletedEvent;
 import org.example.community.domain.post.domain.Post;
 import org.example.community.domain.post.domain.PostAttachment;
 import org.example.community.domain.post.domain.PostAttachmentRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 class PostAttachmentService {
   private final PostAttachmentRepository postAttachmentRepository;
   private final UploadFileService uploadFileService;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Transactional
   public void update(Post post, List<UUID> attachmentIds) {
@@ -68,11 +71,18 @@ class PostAttachmentService {
     postAttachmentRepository.saveAll(postAttachments);
   }
 
+  /**
+   * 게시글 첨부파일을 삭제합니다.
+   * 파일 스토리지에 있는 파일도 삭제됩니다.
+   */
   @Transactional
   public void delete(Post post) {
     var postAttachments = postAttachmentRepository.findByPostId(post.getId());
     for (PostAttachment postAttachment : postAttachments) {
       postAttachment.delete();
     }
+
+    var attachmentIds = postAttachments.stream().map(PostAttachment::getAttachmentId).toList();
+    applicationEventPublisher.publishEvent(new AttachmentsDeletedEvent(attachmentIds));
   }
 }
